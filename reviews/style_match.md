@@ -38,3 +38,11 @@ Remaining gaps (accepted for now, revisit in polish):
 - Hair is cleaner / less painterly than the reference (fewer loose strands, smoother top).
 - Dhoti legs slightly fuller at the hem; front flap simpler than the reference's layered pleats.
 - Reference line work is softer in places (it is a painted illustration); ours is crisp vector.
+
+## v2 art direction (owner request) — `style_frame_v2_front.png`
+The owner judged the traced/painted rebuild glitchy (face, necklace) and asked for a different,
+cleaner style designed by us. Kanha is now redesigned from primitives in a flat kids-TV vector
+style: flat fills, one hard cel shadow, one bold outline colour, simple big eyes.
+Iterations f1→f5: arms too long/rigid → arms tucked behind torso (hidden hands) → arms in front
+with round shoulders; dhoti shortened then rebalanced; scalloped toes replaced by simple toe lines;
+flap simplified to a clean pointed drape.

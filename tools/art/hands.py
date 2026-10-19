@@ -161,9 +161,10 @@ def hand_layers(name, wx, wy, s=1.0, flip=1, angle=0.0, skin=None, sx=None):
     sil = _union_outline([palm] + [p for f in under for p in f])
     sil_d = smooth_closed(T(sil))
     palm_d = smooth_closed(T(palm))
-    lw = 2.6 * s
+    lw = sk.get('lw', 2.6) * s
+    hb = sk.get('blur', 5)
     L = [dict(d=sil_d, fill=sk['fill'],
-              shade=dict(color=sk['sh'], dx=4 * s * flip, dy=5 * s, k=0.9, blur=5 * s, opacity=0.8))]
+              shade=dict(color=sk['sh'], dx=4 * s * flip, dy=5 * s, k=0.9, blur=hb * s, opacity=sk.get('sh_op', 0.8)))]
     # separation lines of extended fingers: their outlines, clipped to outside the palm
     big = f'M{wx-400},{wy-400} L{wx+400},{wy-400} L{wx+400},{wy+400} L{wx-400},{wy+400} Z '
     for f in under:
@@ -176,5 +177,5 @@ def hand_layers(name, wx, wy, s=1.0, flip=1, angle=0.0, skin=None, sx=None):
     for f in over:
         fd = smooth_closed(T(_union_outline(f)))
         L.append(dict(d=fd, fill=sk['fill'], stroke=sk['line'], sw=lw * 0.9,
-                      shade=dict(color=sk['sh'], dx=2 * s, dy=3 * s, k=0.85, blur=3 * s, opacity=0.8)))
+                      shade=dict(color=sk['sh'], dx=2 * s, dy=3 * s, k=0.85, blur=min(hb, 3) * s, opacity=sk.get('sh_op', 0.8))))
     return L

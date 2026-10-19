@@ -6,6 +6,7 @@ from tools.art.common import compose
 view = sys.argv[1]
 mod = importlib.import_module(f'tools.art.boy_{view}')
 metas = mod.build()
+HAND_DEFAULT = 'relaxed' if view in ('side', 'back', 'bq34') else 'side_relaxed'
 # default swap states visible
 show = []
 for m in metas:
@@ -13,12 +14,12 @@ for m in metas:
         base = next(x for x in metas if x['name'] == m['line_of'])
         sw = base.get('swap')
         if sw is None: show.append(m); continue
-        default = {'mouth': 'rest'}.get(sw, 'open' if sw.startswith('eye') else 'side_relaxed')
+        default = {'mouth': 'rest'}.get(sw, 'open' if sw.startswith('eye') else HAND_DEFAULT)
         if base.get('state') == default: show.append(m)
         continue
     sw = m.get('swap')
     if sw is None: show.append(m); continue
-    default = {'mouth': 'rest'}.get(sw, 'open' if sw.startswith('eye') else 'side_relaxed')
+    default = {'mouth': 'rest'}.get(sw, 'open' if sw.startswith('eye') else HAND_DEFAULT)
     if m.get('state') == default: show.append(m)
 im = compose(show, mod.OUT)
 out = sys.argv[2] if len(sys.argv) > 2 else f'build/{view}_preview.png'

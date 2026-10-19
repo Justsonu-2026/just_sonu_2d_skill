@@ -52,13 +52,18 @@ def hair_sheen(blobs):
             for x, y, rx, ry, r, o, b in blobs]
 
 
-def build(write=True):
+def build(write=True, palette=None, out=None, svg_out=None, only=None):
+    from .style import PartSet, bone_for, set_palette
+    from .palette import KANHA
+    set_palette(palette or KANHA)
     C = load_classes(VIEW)
     Y, X = yy_xx()
-    parts = {}
+    PS = PartSet(out or OUT, svg_out or SVG_OUT)
 
     def add(name, layers, pivot, z, backing=False, line_z=None, **extra):
-        parts[name] = (layers, pivot, z, extra, backing, line_z)
+        PS.add(name, layers, pivot, z, backing, line_z, bone=bone_for(name), **extra)
+
+    HAIR_STYLE = dict(fill=P['hair'], stroke=P['hair_line'], sw=LINE * 0.8, shade=shade(P['hair_sh'], 10, 12, 0.92, 10))
 
     # ------------------------------------------------------------------ HEAD
     head_reg = Y < 885
@@ -305,14 +310,16 @@ def build(write=True):
         add(f'foot_{side}', [skin_layer(fdd, shade=shade(P['skin_sh'], 0, -10, 0.92, 8))] + lines,
             (sx, 1700), 6.4, backing=True, line_z=6.0)
 
-    metas = []
-    if write:
-        for name, (layers, pivot, z, extra, backing, line_z) in parts.items():
-            metas.extend(write_part(name, layers, OUT, pivot, z, extra, svg_dir=SVG_OUT,
-                                    backing=backing, line_z=line_z))
-        with open(os.path.join(OUT, 'meta.json'), 'w') as f:
-            json.dump(metas, f, indent=1)
-    return metas
+    PS.skeleton = dict(
+        root=(360, 1765), hips=(360, 1230), chest=(360, 1150), neck=(360, 880), head=(360, 850), head_top=(360, 450),
+        feather=(395, 275), lock_0=(250, 470), lock_1=(365, 440), lock_2=(470, 470),
+        earring_R=(186, 742), earring_L=(538, 742),
+        upperarm_R=(205, 982), forearm_R=(166, 1150), hand_R=(152, 1250), hand_R_tip=(150, 1380),
+        upperarm_L=(515, 982), forearm_L=(554, 1150), hand_L=(568, 1250), hand_L_tip=(570, 1380),
+        thigh_R=(288, 1310), shin_R=(292, 1560), foot_R=(294, 1690), foot_R_tip=(240, 1760),
+        thigh_L=(436, 1310), shin_L=(440, 1560), foot_L=(438, 1690), foot_L_tip=(492, 1760),
+        flap=(360, 1220))
+    return PS.write(only) if write else PS
 
 
 if __name__ == '__main__':

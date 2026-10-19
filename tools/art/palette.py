@@ -18,3 +18,14 @@ KANHA = dict(
     feather_g='#3f6b1d', feather_g2='#6f9a2a', feather_g3='#2b4d14', feather_y='#f4b51c', feather_blue='#2c63a0',
     feather_teal='#5ab0bf', feather_dark='#1b2452', feather_line='#22380e',
 )
+
+
+def _mix(a, b, t):
+    a = [int(a[i:i + 2], 16) for i in (1, 3, 5)]
+    b = [int(b[i:i + 2], 16) for i in (1, 3, 5)]
+    return '#%02x%02x%02x' % tuple(int(round(x + (y - x) * t)) for x, y in zip(a, b))
+
+
+def far_side(P, t=0.28, toward='#2a3060'):
+    """Palette for limbs on the far side of the body: slightly darker/cooler so they read behind."""
+    return {k: (_mix(v, toward, t) if isinstance(v, str) and v.startswith('#') else v) for k, v in P.items()}
