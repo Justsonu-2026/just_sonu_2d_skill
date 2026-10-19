@@ -1,0 +1,17 @@
+# Decisions log
+
+Professional defaults chosen where the brief left room or the environment forced a choice.
+Newest at the bottom.
+
+| # | Date | Decision | Why |
+|---|---|---|---|
+| D1 | 2026-10-19 | **Blender 5.2.2 LTS as the `bpy` Python module** (`pip install bpy==5.2.2`), scripts run with `python script.py` instead of `blender -b -P script.py`. | `download.blender.org` and mirrors are blocked by this container's network policy; PyPI is allowed. Same Blender core, same API. Blender 5.2 is the current LTS in Oct 2026 (the brief's "latest stable 4.x" predates it). Scripts also run unchanged with `blender -b -P`. |
+| D2 | 2026-10-19 | Installed Mesa EGL (`libegl1 libegl-mesa0 libgl1-mesa-dri`) for headless EEVEE. | `bpy` needs an EGL context to render; no GPU in the container. |
+| D3 | 2026-10-19 | **The character is a toddler, ~3 heads tall**, exactly as in the reference — not the 9–10-year-old, 4–4.5-head boy the style target mentions. | Section 1 says the reference is the most important rule: same proportions. |
+| D4 | 2026-10-19 | Character name: **Kanha** (affectionate name for baby Krishna, which the reference depicts). Sample A line: "Hi! I'm Kanha!" | The brief leaves `<name>` open; the name fits the design. |
+| D5 | 2026-10-19 | Outfit follows the reference (dhoti, orange sash, jewellery; no shirt). Overlap items from the brief that do not exist on this design are mapped: *shirt hem* → sash front flap + sash ends; *collar tag* → the puppy's collar tag; plus hair locks, peacock feather and necklace pendant. | Stay on-model with the reference. |
+| D6 | 2026-10-19 | **Art pipeline: SVG master → high-res PNG (CairoSVG) → textured planes in Blender** (emission + alpha, origin at pivot). Shapes are traced from the reference as a guide layer, then rebuilt as clean, smoothed closed Bézier paths per part, with gradients matching the painted shading. | Blender's SVG importer drops gradients and blur; the reference's look *is* soft gradient shading. See `research/04_blender_2d.md`. |
+| D7 | 2026-10-19 | The Character Bazaar "Leo" benchmark page could not be opened (host blocked by policy). Kit checklist built from the standard pro-kit contents and the reference's own sheet layout. | `research/01_pro_kit_checklist.md`. |
+| D8 | 2026-10-19 | The story's animal stays a **puppy** as the brief asks (the reference also shows a calf; a calf could be swapped in later with the same quadruped rig). | Brief is explicit. |
+| D9 | 2026-10-19 | No paid AI image/video generation services were used for any asset. All art is authored in code (SVG) and rendered in Blender. | Avoid spending the owner's credits without approval; keeps the pipeline reproducible from the repo. |
+| D10 | 2026-10-19 | **Binaries are committed as plain git objects, not Git LFS.** | The container's git proxy refuses LFS uploads (`POST lfs.github.com/.../verify → 403 Forbidden`). LFS cannot be configured from inside the session. Files are kept small (PNG optimised, final frame sequence stored at full size only for the final cut). If LFS becomes available later: `git lfs migrate import --include="*.png,*.mp4,*.blend,*.gif,*.jpg"`. |
